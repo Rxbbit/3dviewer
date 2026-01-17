@@ -34,34 +34,41 @@
             </div>
         </header>
 
-        <div id="toolbar-top-right">
+        <!-- Top Right: Scence List -->
+        <div id="scene-container" class="panel-container top-right">
             <button id="toggle-scenes" class="btn-icon" aria-label="Toggle Scenes" title="Lista de Escenas">
                 ☰
             </button>
-            <button id="toggle-controls" class="btn-icon" aria-label="Toggle Controls" title="Ajustes y Controles">
+            <div id="scene-list" class="panel hidden">
+                <h3>Escenas</h3>
+                <div id="scene-items">
+                    <!-- Items will be injected here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Left: Controls -->
+        <div id="controls-container" class="panel-container bottom-left">
+            <div id="controls-help" class="panel">
+                <div class="panel-header">
+                    <h3>Controles</h3>
+                    <button id="toggle-controls" class="btn-mini" aria-label="Minimize Controls">_</button>
+                </div>
+                <div class="panel-content">
+                    <p>🖱️ <strong>Mirar:</strong> Clic Izquierdo + Arrastrar</p>
+                    <p>🔍 <strong>Zoom:</strong> Rueda del Ratón</p>
+                    <hr>
+                    <p>🔄 <strong>Rotación (Horizonte):</strong></p>
+                    <input type="range" id="rotation-slider" min="0" max="360" value="0" style="width: 100%;">
+                    <br><br>
+                    <button id="reset-rotation" class="btn"
+                        style="width: 100%; justify-content: center;">Restablecer</button>
+                </div>
+            </div>
+            <!-- Minimized Button (Hidden by default) -->
+            <button id="show-controls" class="btn-icon hidden" aria-label="Show Controls">
                 ⚙️
             </button>
-        </div>
-
-        <div id="scene-list" class="panel right-sidebar hidden">
-            <h3>Escenas</h3>
-            <div id="scene-items">
-                <!-- Items will be injected here -->
-            </div>
-        </div>
-
-        <div id="controls-help" class="panel central-modal hidden">
-            <h3>Controles</h3>
-            <div class="panel-content">
-                <p>🖱️ <strong>Mirar:</strong> Clic Izquierdo + Arrastrar</p>
-                <p>🔍 <strong>Zoom:</strong> Rueda del Ratón</p>
-                <hr>
-                <p>🔄 <strong>Rotación (Horizonte):</strong></p>
-                <input type="range" id="rotation-slider" min="0" max="360" value="0" style="width: 100%;">
-                <br><br>
-                <button id="reset-rotation" class="btn"
-                    style="width: 100%; justify-content: center;">Restablecer</button>
-            </div>
         </div>
     </div>
 
