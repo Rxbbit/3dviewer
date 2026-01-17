@@ -1,24 +1,32 @@
+/* --- Variables --- */
 :root {
     --bg-dark: #121212;
-    --surface-glass: rgba(20, 20, 20, 0.7);
-    --primary-color: #007bff;
-    --text-main: #ffffff;
-    --text-muted: #b0b0b0;
-    --border-radius: 8px;
-    --blur-amount: 10px;
+    --surface-glass: rgba(18, 18, 18, 0.85);
+    /* Darker, more legible glass */
+    --surface-hover: rgba(40, 40, 40, 0.9);
+    --primary-color: #3b82f6;
+    /* Modern Blue */
+    --text-main: #f3f4f6;
+    --text-muted: #9ca3af;
+    --border-radius: 12px;
+    --border-color: rgba(255, 255, 255, 0.08);
+    --blur-amount: 12px;
+    --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
 body {
     overflow: hidden;
     background-color: var(--bg-dark);
     color: var(--text-main);
+    font-size: 14px;
 }
 
 #canvas {
@@ -31,6 +39,7 @@ body {
     outline: none;
 }
 
+/* --- UI Containers --- */
 #ui-container {
     position: absolute;
     top: 0;
@@ -39,168 +48,239 @@ body {
     height: 100%;
     z-index: 10;
     pointer-events: none;
-    /* Let clicks pass through to canvas where needed */
+    /* Let clicks pass to canvas */
 }
 
-/* Header & Upload Button */
+/* Panel Containers */
+.panel-container {
+    position: absolute;
+    z-index: 20;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.panel-container.top-right {
+    top: 20px;
+    right: 20px;
+    align-items: flex-end;
+}
+
+.panel-container.bottom-left {
+    bottom: 20px;
+    left: 20px;
+    align-items: flex-start;
+}
+
+/* --- Components --- */
+
+/* Header */
 header {
     position: absolute;
     top: 20px;
     left: 20px;
     right: 20px;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    /* Center title */
     align-items: center;
-    pointer-events: auto;
+    pointer-events: none;
 }
 
 h1 {
-    font-size: 1.2rem;
-    font-weight: 600;
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 4px 12px;
+    border-radius: 20px;
+    backdrop-filter: blur(4px);
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    pointer-events: auto;
 }
 
+/* New Upload Button Placement? keeping it simple for now, maybe floats top left */
+header .controls {
+    position: absolute;
+    left: 0;
+    pointer-events: auto;
+}
+
+/* Buttons */
 .btn {
     background: var(--surface-glass);
     backdrop-filter: blur(var(--blur-amount));
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: white;
-    padding: 10px 20px;
-    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 10px 18px;
+    border-radius: 8px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     align-items: center;
     gap: 8px;
+    font-weight: 500;
+    box-shadow: var(--shadow-sm);
     font-size: 0.9rem;
 }
 
 .btn:hover {
-    background: rgba(40, 40, 40, 0.9);
-    border-color: rgba(255, 255, 255, 0.3);
+    background: var(--surface-hover);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+}
+
+.btn:active {
+    transform: translateY(0);
 }
 
 .btn.primary {
-    background: rgba(0, 123, 255, 0.2);
-    border-color: rgba(0, 123, 255, 0.5);
+    background: rgba(59, 130, 246, 0.2);
+    border-color: rgba(59, 130, 246, 0.4);
+    color: #60a5fa;
 }
 
 .btn.primary:hover {
-    background: rgba(0, 123, 255, 0.4);
+    background: rgba(59, 130, 246, 0.3);
 }
 
-/* Help Panel */
+/* Icon Buttons (Circular) */
+.btn-icon {
+    width: 44px;
+    /* Touch target */
+    height: 44px;
+    border-radius: 50%;
+    background: var(--surface-glass);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.25rem;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(var(--blur-amount));
+    box-shadow: var(--shadow-md);
+}
+
+.btn-icon:hover {
+    background: var(--surface-hover);
+    transform: scale(1.05);
+}
+
+.btn-mini {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 4px;
+    line-height: 1;
+    border-radius: 4px;
+}
+
+.btn-mini:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Panels */
 .panel {
     background: var(--surface-glass);
-    backdrop-filter: blur(var(--blur-amount));
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 20px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    /* Safari support */
+    border: 1px solid var(--border-color);
+    padding: 16px;
     border-radius: var(--border-radius);
     pointer-events: auto;
+    box-shadow: var(--shadow-md);
+    transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+
+    opacity: 1;
+    transform: scale(1);
+    max-width: 100%;
 }
 
-.panel.bottom-left {
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-    width: 250px;
+.panel.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.95);
+    display: none;
+    /* simple hide for layout shifts */
+}
+
+/* Panel Header */
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .panel h3 {
-    margin-bottom: 10px;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 1.2px;
     color: var(--text-muted);
 }
 
-.panel p {
-    font-size: 0.85rem;
-    margin-bottom: 6px;
-    line-height: 1.4;
-    color: var(--text-main);
+/* Controls Scoped Styles */
+#controls-help {
+    width: 280px;
 }
 
-kbd {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-family: monospace;
+.panel-content p {
+    margin-bottom: 8px;
+    line-height: 1.5;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+input[type="range"] {
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    outline: none;
+    margin: 10px 0;
 }
 
 hr {
     border: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    margin: 10px 0;
+    border-top: 1px solid var(--border-color);
+    margin: 12px 0;
 }
 
-#mode-indicator {
-    margin-top: 5px;
-    font-weight: bold;
-    color: var(--primary-color);
-}
-
-/* Loading Spinner */
-#loading-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.8);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    z-index: 100;
-    pointer-events: auto;
-}
-
-.hidden {
-    display: none !important;
-}
-
-.spinner {
-    width: 40px;
-    height: 40px;
-    border: 3px solid rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
-    border-top-color: var(--primary-color);
-    animation: spin 1s ease-in-out infinite;
-    margin-bottom: 15px;
-}
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-/* Right Sidebar for Scenes */
-.panel.right-sidebar {
-    position: absolute;
-    top: 80px;
-    /* Below header */
-    right: 20px;
-    width: 200px;
-    max-height: calc(100vh - 120px);
-    overflow-y: auto;
+/* Scene List Specifics */
+#scene-list {
+    width: 240px;
+    max-height: 60vh;
     display: flex;
     flex-direction: column;
 }
 
 #scene-items {
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
+    /* Custom scrollbar later if needed */
 }
 
 .scene-item {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 12px;
     border-radius: 6px;
     cursor: pointer;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     color: var(--text-muted);
     border: 1px solid transparent;
     transition: all 0.2s ease;
@@ -210,13 +290,128 @@ hr {
 }
 
 .scene-item:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.08);
     color: var(--text-main);
 }
 
 .scene-item.active {
-    background: rgba(0, 123, 255, 0.2);
-    border-color: var(--primary-color);
-    color: white;
+    background: rgba(59, 130, 246, 0.15);
+    border-color: rgba(59, 130, 246, 0.3);
+    color: #93c5fd;
     font-weight: 500;
+}
+
+/* Loading Overlay */
+#loading-overlay {
+    background: #000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+}
+
+.spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-top-color: var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+#loading-overlay p {
+    margin-top: 16px;
+    letter-spacing: 1px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* --- Mobile Ops --- */
+@media (max-width: 768px) {
+
+    /* Header compact tweaks */
+    header {
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        flex-direction: row;
+        justify-content: flex-end;
+        /* Push title right or center */
+    }
+
+    header .controls {
+        position: relative;
+        /* Unlock from absolute */
+        left: auto;
+        margin-right: auto;
+        /* Push others right */
+    }
+
+    h1 {
+        display: none;
+        /* Often redundant on mobile if space is tight, or make small */
+    }
+
+    .btn {
+        padding: 8px 14px;
+        font-size: 0.85rem;
+    }
+
+    /* Containers */
+    .panel-container.top-right {
+        top: 60px;
+        /* clear header */
+        right: 10px;
+    }
+
+    .panel-container.bottom-left {
+        bottom: 10px;
+        left: 10px;
+        right: 10px;
+        /* expand width if needed */
+        width: auto;
+        align-items: stretch;
+        /* Make panels full width capable */
+    }
+
+    /* Panels Mobile */
+    #scene-list {
+        width: 220px;
+        /* Keep narrow enough */
+    }
+
+    #controls-help {
+        width: 100%;
+        /* Full avail width in container */
+        max-width: 400px;
+    }
+
+    /* Button sizing for touch */
+    .btn-icon,
+    .btn {
+        min-height: 48px;
+        min-width: 48px;
+        /* Square icons */
+    }
+
+    .btn {
+        min-width: auto;
+        /* Text buttons allow var width */
+    }
 }
