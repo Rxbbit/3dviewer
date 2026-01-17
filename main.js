@@ -12,8 +12,9 @@ const resetRotationBtn = document.getElementById('reset-rotation');
 const sceneListPanel = document.getElementById('scene-list');
 const sceneItemsContainer = document.getElementById('scene-items');
 const toggleScenesBtn = document.getElementById('toggle-scenes');
-const toggleControlsBtn = document.getElementById('toggle-controls');
-const controlsPanel = document.querySelector('#controls-help .panel-content')?.parentElement || document.getElementById('controls-help');
+const toggleControlsBtn = document.getElementById('toggle-controls'); // Min button
+const showControlsBtn = document.getElementById('show-controls'); // Restore button
+const controlsPanel = document.getElementById('controls-help');
 
 let scenes = []; // Array of { name, url, file }
 let currentSceneIndex = -1;
@@ -87,9 +88,18 @@ function init() {
         });
     }
 
-    if (toggleControlsBtn && controlsPanel) {
+    // Controls Minimize/Restore
+    if (toggleControlsBtn && controlsPanel && showControlsBtn) {
+        // Minimize
         toggleControlsBtn.addEventListener('click', () => {
-            controlsPanel.classList.toggle('hidden');
+            controlsPanel.classList.add('hidden');
+            showControlsBtn.classList.remove('hidden');
+        });
+
+        // Restore
+        showControlsBtn.addEventListener('click', () => {
+            controlsPanel.classList.remove('hidden');
+            showControlsBtn.classList.add('hidden');
         });
     }
 
