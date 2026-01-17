@@ -11,6 +11,9 @@ const rotationSlider = document.getElementById('rotation-slider');
 const resetRotationBtn = document.getElementById('reset-rotation');
 const sceneListPanel = document.getElementById('scene-list');
 const sceneItemsContainer = document.getElementById('scene-items');
+const toggleScenesBtn = document.getElementById('toggle-scenes');
+const toggleControlsBtn = document.getElementById('toggle-controls');
+const controlsPanel = document.querySelector('#controls-help .panel-content')?.parentElement || document.getElementById('controls-help');
 
 let scenes = []; // Array of { name, url, file }
 let currentSceneIndex = -1;
@@ -77,6 +80,19 @@ function init() {
         });
     }
 
+    // Toggle Buttons Logic
+    if (toggleScenesBtn && sceneListPanel) {
+        toggleScenesBtn.addEventListener('click', () => {
+            sceneListPanel.classList.toggle('hidden');
+        });
+    }
+
+    if (toggleControlsBtn && controlsPanel) {
+        toggleControlsBtn.addEventListener('click', () => {
+            controlsPanel.classList.toggle('hidden');
+        });
+    }
+
     // Rotation Controls
     if (rotationSlider) {
         rotationSlider.addEventListener('input', (e) => {
@@ -133,6 +149,13 @@ function handleFileUpload(event) {
 
     console.log(`Processing ${files.length} files`);
 
+    // Cleanup old scenes to free memory
+    scenes.forEach(scene => {
+        URL.revokeObjectURL(scene.url);
+    });
+    scenes = [];
+    currentSceneIndex = -1;
+
     // Convert FileList to Array and process
     const newScenes = Array.from(files).map(file => ({
         name: file.name,
@@ -141,21 +164,20 @@ function handleFileUpload(event) {
     }));
 
     // Add to scenes array
-    const startIndex = scenes.length;
-    scenes = [...scenes, ...newScenes];
+    scenes = [...newScenes];
 
-    // Show the sidebar if hidden
-    if (sceneListPanel) sceneListPanel.classList.remove('hidden');
+    // Show the sidebar if hidden (optional, maybe user wants it hidden)
+    // if (sceneListPanel) sceneListPanel.classList.remove('hidden');
 
     // Render list
     renderSceneList();
 
-    // If no scene was active, load the first new one
-    if (currentSceneIndex === -1) {
-        loadScene(startIndex);
+    // Load the first new one
+    if (scenes.length > 0) {
+        loadScene(0);
     }
 
-    // Reset input so same files can be selected again if needed (though tricky with multiple)
+    // Reset input so same files can be selected again if needed
     event.target.value = '';
 }
 
