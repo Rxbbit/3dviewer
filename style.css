@@ -99,14 +99,19 @@ h1 {
     pointer-events: auto;
 }
 
-/* Panel Containers */
+/* Panel Containers - Positioning */
 .panel-container {
     position: absolute;
     z-index: 20;
     pointer-events: none;
-    /* Let clicks pass through container */
+    /* Container lets clicks pass */
     display: flex;
     flex-direction: column;
+}
+
+.panel-container.top-right {
+    top: 20px;
+    right: 20px;
     align-items: flex-end;
 }
 
@@ -116,131 +121,169 @@ h1 {
     align-items: flex-start;
 }
 
-.panel-container.right-sidebar {
-    top: 80px;
-    right: 20px;
+/* Base Styles */
+:root {
+    --bg-dark: #121212;
+    --surface-glass: rgba(15, 15, 15, 0.9);
+    /* Less transparent for legibility */
+    --surface-hover: rgba(30, 30, 30, 0.95);
+    --primary-color: #007bff;
+    --text-main: #f0f0f0;
+    --text-muted: #a0a0a0;
+    --border-radius: 8px;
+    --border-color: rgba(255, 255, 255, 0.1);
 }
 
-/* Toggle Buttons */
-.btn-toggle {
+/* Panels */
+.panel {
     background: var(--surface-glass);
-    backdrop-filter: blur(var(--blur-amount));
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    padding: 16px;
+    border-radius: var(--border-radius);
+    pointer-events: auto;
+    /* IMPORTANT: Content catches clicks */
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.panel.hidden {
+    display: none;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Specific Panel Styles */
+#scene-list {
+    margin-top: 10px;
+    width: 220px;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+}
+
+#controls-help {
+    width: 260px;
+}
+
+/* Headers & Text */
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 8px;
+}
+
+.panel h3 {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.panel p {
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+    color: var(--text-main);
+}
+
+/* Buttons */
+.btn-icon {
+    background: var(--surface-glass);
+    border: 1px solid var(--border-color);
     color: white;
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    width: 240px;
-    max-height: calc(100vh - 120px);
-    overflow-y: auto;
-    transform-origin: top right;
-    transform: scale(1) translateY(0);
-}
-
-.right-sidebar.hidden {
-    transform: scale(0.95) translateY(-20px);
-}
-
-/* Central Modal (Controls) */
-.central-modal {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(1);
-    width: 320px;
-    z-index: 30;
-    transform-origin: center center;
-}
-
-.central-modal.hidden {
-    transform: translate(-50%, -45%) scale(0.9);
-    opacity: 0;
-}
-
-/* Controls Content */
-.panel-content input[type="range"] {
-    width: 100%;
-    margin-top: 5px;
     cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s;
+    pointer-events: auto;
+    /* IMPORTANT */
 }
 
-/* Update Scene Items */
+.btn-icon:hover {
+    background: var(--surface-hover);
+    transform: scale(1.05);
+}
+
+.btn-mini {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0 5px;
+    line-height: 1;
+}
+
+.btn-mini:hover {
+    color: white;
+}
+
+/* Scene Items */
 #scene-items {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
 }
 
 .scene-item {
-    padding: 14px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid transparent;
-    border-radius: 8px;
-    transition: all 0.2s ease;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: var(--text-muted);
+    transition: background 0.2s;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
 .scene-item:hover {
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
 }
 
 .scene-item.active {
-    background: rgba(0, 123, 255, 0.15);
-    border-color: rgba(0, 123, 255, 0.4);
-    color: #4da3ff;
-    font-weight: 500;
+    background: rgba(0, 123, 255, 0.2);
+    color: #5cb8ff;
+    border: 1px solid rgba(0, 123, 255, 0.3);
 }
 
 /* Loading Modern */
 #loading-overlay {
-    background: #050505;
-    /* Solid dark background */
+    background: #000;
 }
 
 .spinner-modern {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     border: 3px solid rgba(255, 255, 255, 0.1);
     border-radius: 50%;
     border-top-color: var(--primary-color);
-    border-right-color: var(--primary-color);
     animation: spin 0.8s linear infinite;
-    box-shadow: 0 0 15px rgba(0, 123, 255, 0.2);
 }
 
 .loading-text {
-    margin-top: 20px;
-    font-size: 1rem;
-    font-weight: 500;
-    letter-spacing: 2px;
+    margin-top: 15px;
+    font-size: 0.9rem;
     text-transform: uppercase;
-    color: var(--text-muted);
+    letter-spacing: 2px;
+    color: #888;
 }
 
-/* Mobile Optimization */
+/* Mobile */
 @media (max-width: 768px) {
-    header {
+    .panel-container.top-right {
         top: 10px;
-        left: 10px;
-        right: 10px;
-    }
-
-    h1 {
-        font-size: 1rem;
-    }
-
-    .btn {
-        padding: 8px 16px;
-        font-size: 0.85rem;
-    }
-
-    .panel-container.right-sidebar {
-        top: 70px;
         right: 10px;
     }
 
@@ -249,15 +292,12 @@ h1 {
         left: 10px;
     }
 
-    .panel-container.bottom-left .panel {
-        width: calc(100vw - 40px);
-        max-width: 300px;
+    #scene-list {
+        width: 200px;
     }
 
-    /* Ensure touch targets are large enough */
-    .btn,
-    .scene-item,
-    .btn-toggle {
-        min-height: 44px;
+    #controls-help {
+        width: calc(100vw - 40px);
+        max-width: 300px;
     }
 }
