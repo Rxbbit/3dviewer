@@ -35,22 +35,41 @@
             <p>Loading panorama...</p>
         </div>
 
-        <div id="scene-list" class="panel right-sidebar hidden">
-            <h3>Scenes</h3>
-            <div id="scene-items">
-                <!-- Items will be injected here -->
+        <!-- Scene List (Right) -->
+        <div id="scene-container" class="panel-container top-right">
+            <button id="toggle-scenes" class="btn-icon" aria-label="Toggle Scenes" title="Hide/Show Scenes">
+                ☰
+            </button>
+            <div id="scene-list" class="panel">
+                <div class="panel-header">
+                    <h3>Scenes</h3>
+                </div>
+                <div id="scene-items">
+                    <!-- Items will be injected here -->
+                </div>
             </div>
         </div>
 
-        <div id="controls-help" class="panel bottom-left">
-            <h3>Controls</h3>
-            <p>🖱️ <strong>Look:</strong> Left Click + Drag</p>
-            <p>🔍 <strong>Zoom:</strong> Mouse Wheel</p>
-            <hr>
-            <p>🔄 <strong>Rotation (Horizon):</strong></p>
-            <input type="range" id="rotation-slider" min="0" max="360" value="0" style="width: 100%;">
-            <br><br>
-            <button id="reset-rotation" class="btn" style="width: 100%; justify-content: center;">Reset</button>
+        <!-- Controls (Bottom Left) -->
+        <div id="controls-container" class="panel-container bottom-left">
+            <div id="controls-help" class="panel">
+                <div class="panel-header">
+                    <h3>Controls</h3>
+                </div>
+                <div class="panel-content">
+                    <p>🖱️ <strong>Look:</strong> Left Click + Drag</p>
+                    <p>🔍 <strong>Zoom:</strong> Mouse Wheel</p>
+                    <hr>
+                    <p>🔄 <strong>Rotation (Horizon):</strong></p>
+                    <input type="range" id="rotation-slider" min="0" max="360" value="0" style="width: 100%;">
+                    <br><br>
+                    <button id="reset-rotation" class="btn" style="width: 100%; justify-content: center;">Reset</button>
+                </div>
+            </div>
+            <!-- Toggle Icon (Placed after panel so it appears at bottom with flex column) -->
+            <button id="toggle-controls" class="btn-icon" aria-label="Toggle Controls" title="Hide/Show Controls">
+                ⚙️
+            </button>
         </div>
     </div>
 
