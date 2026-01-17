@@ -11,6 +11,9 @@ const rotationSlider = document.getElementById('rotation-slider');
 const resetRotationBtn = document.getElementById('reset-rotation');
 const sceneListPanel = document.getElementById('scene-list');
 const sceneItemsContainer = document.getElementById('scene-items');
+const toggleScenesBtn = document.getElementById('toggle-scenes');
+const toggleControlsBtn = document.getElementById('toggle-controls');
+const controlsPanel = document.getElementById('controls-help');
 
 let scenes = []; // Array of { name, url, file }
 let currentSceneIndex = -1;
@@ -74,6 +77,20 @@ function init() {
         fileInput.addEventListener('change', (e) => {
             console.log("File input changed:", e.target.files);
             handleFileUpload(e);
+        });
+    }
+
+    // Toggle Scenes
+    if (toggleScenesBtn && sceneListPanel) {
+        toggleScenesBtn.addEventListener('click', () => {
+            sceneListPanel.classList.toggle('hidden');
+        });
+    }
+
+    // Toggle Controls (Unified)
+    if (toggleControlsBtn && controlsPanel) {
+        toggleControlsBtn.addEventListener('click', () => {
+            controlsPanel.classList.toggle('hidden');
         });
     }
 
