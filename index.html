@@ -19,10 +19,6 @@
 </head>
 
 <body>
-    <div id="loading-overlay" class="hidden">
-        <div class="spinner-modern"></div>
-        <p class="loading-text">Cargando...</p>
-    </div>
     <div id="ui-container">
         <header>
             <h1>360° Viewer</h1>
@@ -34,41 +30,27 @@
             </div>
         </header>
 
-        <!-- Top Right: Scence List -->
-        <div id="scene-container" class="panel-container top-right">
-            <button id="toggle-scenes" class="btn-icon" aria-label="Toggle Scenes" title="Lista de Escenas">
-                ☰
-            </button>
-            <div id="scene-list" class="panel hidden">
-                <h3>Escenas</h3>
-                <div id="scene-items">
-                    <!-- Items will be injected here -->
-                </div>
+        <div id="loading-overlay" class="hidden">
+            <div class="spinner"></div>
+            <p>Loading panorama...</p>
+        </div>
+
+        <div id="scene-list" class="panel right-sidebar hidden">
+            <h3>Scenes</h3>
+            <div id="scene-items">
+                <!-- Items will be injected here -->
             </div>
         </div>
 
-        <!-- Bottom Left: Controls -->
-        <div id="controls-container" class="panel-container bottom-left">
-            <div id="controls-help" class="panel">
-                <div class="panel-header">
-                    <h3>Controles</h3>
-                    <button id="toggle-controls" class="btn-mini" aria-label="Minimize Controls">_</button>
-                </div>
-                <div class="panel-content">
-                    <p>🖱️ <strong>Mirar:</strong> Clic Izquierdo + Arrastrar</p>
-                    <p>🔍 <strong>Zoom:</strong> Rueda del Ratón</p>
-                    <hr>
-                    <p>🔄 <strong>Rotación (Horizonte):</strong></p>
-                    <input type="range" id="rotation-slider" min="0" max="360" value="0" style="width: 100%;">
-                    <br><br>
-                    <button id="reset-rotation" class="btn"
-                        style="width: 100%; justify-content: center;">Restablecer</button>
-                </div>
-            </div>
-            <!-- Minimized Button (Hidden by default) -->
-            <button id="show-controls" class="btn-icon hidden" aria-label="Show Controls">
-                ⚙️
-            </button>
+        <div id="controls-help" class="panel bottom-left">
+            <h3>Controls</h3>
+            <p>🖱️ <strong>Look:</strong> Left Click + Drag</p>
+            <p>🔍 <strong>Zoom:</strong> Mouse Wheel</p>
+            <hr>
+            <p>🔄 <strong>Rotation (Horizon):</strong></p>
+            <input type="range" id="rotation-slider" min="0" max="360" value="0" style="width: 100%;">
+            <br><br>
+            <button id="reset-rotation" class="btn" style="width: 100%; justify-content: center;">Reset</button>
         </div>
     </div>
 
