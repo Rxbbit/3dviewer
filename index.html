@@ -35,22 +35,34 @@
             <p>Loading panorama...</p>
         </div>
 
-        <div id="scene-list" class="panel right-sidebar hidden">
-            <h3>Scenes</h3>
-            <div id="scene-items">
-                <!-- Items will be injected here -->
+        <div id="scene-list-container" class="panel-container right-sidebar">
+            <button id="toggle-scenes" class="btn-toggle" aria-label="Toggle Scenes">
+                ☰
+            </button>
+            <div id="scene-list" class="panel hidden">
+                <h3>Scenes</h3>
+                <div id="scene-items">
+                    <!-- Items will be injected here -->
+                </div>
             </div>
         </div>
 
-        <div id="controls-help" class="panel bottom-left">
-            <h3>Controls</h3>
-            <p>🖱️ <strong>Look:</strong> Left Click + Drag</p>
-            <p>🔍 <strong>Zoom:</strong> Mouse Wheel</p>
-            <hr>
-            <p>🔄 <strong>Rotation (Horizon):</strong></p>
-            <input type="range" id="rotation-slider" min="0" max="360" value="0" style="width: 100%;">
-            <br><br>
-            <button id="reset-rotation" class="btn" style="width: 100%; justify-content: center;">Reset</button>
+        <div id="controls-container" class="panel-container bottom-left">
+            <button id="toggle-controls" class="btn-toggle" aria-label="Toggle Controls">
+                ⚙️
+            </button>
+            <div id="controls-help" class="panel">
+                <h3>Controls</h3>
+                <div class="panel-content">
+                    <p>🖱️ <strong>Look:</strong> Left Click + Drag</p>
+                    <p>🔍 <strong>Zoom:</strong> Mouse Wheel</p>
+                    <hr>
+                    <p>🔄 <strong>Rotation (Horizon):</strong></p>
+                    <input type="range" id="rotation-slider" min="0" max="360" value="0" style="width: 100%;">
+                    <br><br>
+                    <button id="reset-rotation" class="btn" style="width: 100%; justify-content: center;">Reset</button>
+                </div>
+            </div>
         </div>
     </div>
 
