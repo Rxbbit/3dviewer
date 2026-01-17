@@ -11,10 +11,6 @@ const rotationSlider = document.getElementById('rotation-slider');
 const resetRotationBtn = document.getElementById('reset-rotation');
 const sceneListPanel = document.getElementById('scene-list');
 const sceneItemsContainer = document.getElementById('scene-items');
-const toggleScenesBtn = document.getElementById('toggle-scenes');
-const toggleControlsBtn = document.getElementById('toggle-controls'); // Min button
-const showControlsBtn = document.getElementById('show-controls'); // Restore button
-const controlsPanel = document.getElementById('controls-help');
 
 let scenes = []; // Array of { name, url, file }
 let currentSceneIndex = -1;
@@ -81,28 +77,6 @@ function init() {
         });
     }
 
-    // Toggle Buttons Logic
-    if (toggleScenesBtn && sceneListPanel) {
-        toggleScenesBtn.addEventListener('click', () => {
-            sceneListPanel.classList.toggle('hidden');
-        });
-    }
-
-    // Controls Minimize/Restore
-    if (toggleControlsBtn && controlsPanel && showControlsBtn) {
-        // Minimize
-        toggleControlsBtn.addEventListener('click', () => {
-            controlsPanel.classList.add('hidden');
-            showControlsBtn.classList.remove('hidden');
-        });
-
-        // Restore
-        showControlsBtn.addEventListener('click', () => {
-            controlsPanel.classList.remove('hidden');
-            showControlsBtn.classList.add('hidden');
-        });
-    }
-
     // Rotation Controls
     if (rotationSlider) {
         rotationSlider.addEventListener('input', (e) => {
@@ -159,13 +133,6 @@ function handleFileUpload(event) {
 
     console.log(`Processing ${files.length} files`);
 
-    // Cleanup old scenes to free memory
-    scenes.forEach(scene => {
-        URL.revokeObjectURL(scene.url);
-    });
-    scenes = [];
-    currentSceneIndex = -1;
-
     // Convert FileList to Array and process
     const newScenes = Array.from(files).map(file => ({
         name: file.name,
@@ -174,20 +141,21 @@ function handleFileUpload(event) {
     }));
 
     // Add to scenes array
-    scenes = [...newScenes];
+    const startIndex = scenes.length;
+    scenes = [...scenes, ...newScenes];
 
-    // Show the sidebar if hidden (optional, maybe user wants it hidden)
-    // if (sceneListPanel) sceneListPanel.classList.remove('hidden');
+    // Show the sidebar if hidden
+    if (sceneListPanel) sceneListPanel.classList.remove('hidden');
 
     // Render list
     renderSceneList();
 
-    // Load the first new one
-    if (scenes.length > 0) {
-        loadScene(0);
+    // If no scene was active, load the first new one
+    if (currentSceneIndex === -1) {
+        loadScene(startIndex);
     }
 
-    // Reset input so same files can be selected again if needed
+    // Reset input so same files can be selected again if needed (though tricky with multiple)
     event.target.value = '';
 }
 
