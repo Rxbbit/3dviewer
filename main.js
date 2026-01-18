@@ -7,12 +7,10 @@ let scene, camera, renderer, controls;
 let sphereMesh = null;
 const fileInput = document.getElementById('file-input');
 const loadingOverlay = document.getElementById('loading-overlay');
-const sceneListPanel = document.getElementById('scene-list');
+const toggleMenuBtn = document.getElementById('toggle-menu');
+const menuDropdown = document.getElementById('menu-dropdown');
 const sceneItemsContainer = document.getElementById('scene-items');
-const toggleScenesBtn = document.getElementById('toggle-scenes');
-const toggleControlsBtn = document.getElementById('toggle-controls');
-const closeControlsBtn = document.getElementById('close-controls'); // New X button
-const controlsPanel = document.getElementById('controls-help');
+const scenesSection = document.getElementById('scenes-section'); // New container reference
 
 let scenes = []; // Array of { name, url, file }
 let currentSceneIndex = -1;
@@ -116,26 +114,20 @@ function init() {
         });
     }
 
-    // Toggle Scenes
-    if (toggleScenesBtn && sceneListPanel) {
-        toggleScenesBtn.addEventListener('click', () => {
-            sceneListPanel.classList.toggle('hidden');
+    // Toggle Main Menu
+    if (toggleMenuBtn && menuDropdown) {
+        toggleMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent immediate close
+            menuDropdown.classList.toggle('hidden');
         });
-    }
 
-    // Toggle Controls (Unified)
-    if (toggleControlsBtn && controlsPanel) {
-        toggleControlsBtn.addEventListener('click', () => {
-            controlsPanel.classList.toggle('hidden');
-        });
-    }
-
-    // Close Controls Button (Desktop/Mobile X button)
-    if (closeControlsBtn && controlsPanel) {
-        closeControlsBtn.addEventListener('click', (e) => {
-            // Stop propagation to prevent hitting underlying elements if they overlap
-            e.stopPropagation();
-            controlsPanel.classList.add('hidden');
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!menuDropdown.classList.contains('hidden') &&
+                !menuDropdown.contains(e.target) &&
+                e.target !== toggleMenuBtn) {
+                menuDropdown.classList.add('hidden');
+            }
         });
     }
 
@@ -190,8 +182,11 @@ function handleFileUpload(event) {
     const startIndex = scenes.length;
     scenes = [...scenes, ...newScenes];
 
-    // Show the sidebar if hidden
-    if (sceneListPanel) sceneListPanel.classList.remove('hidden');
+    // Show the scenes section if hidden
+    if (scenesSection) scenesSection.classList.remove('hidden');
+
+    // Auto-open menu to show success (optional, maybe intrusive? User said "pongo en la esquina superior derecha" implies manual)
+    // Let's NOT auto-open the menu, but ensure the scene list IS populated.
 
     // Render list
     renderSceneList();
