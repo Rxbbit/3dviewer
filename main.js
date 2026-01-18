@@ -171,6 +171,13 @@ function handleFileUpload(event) {
 
     console.log(`Processing ${files.length} files`);
 
+    // Cleanup existing scenes to free memory and reset state
+    if (scenes.length > 0) {
+        scenes.forEach(scene => URL.revokeObjectURL(scene.url));
+        scenes = [];
+        currentSceneIndex = -1;
+    }
+
     // Convert FileList to Array and process
     const newScenes = Array.from(files).map(file => ({
         name: file.name,
@@ -179,24 +186,18 @@ function handleFileUpload(event) {
     }));
 
     // Add to scenes array
-    const startIndex = scenes.length;
-    scenes = [...scenes, ...newScenes];
+    scenes = [...newScenes];
 
     // Show the scenes section if hidden
     if (scenesSection) scenesSection.classList.remove('hidden');
 
-    // Auto-open menu to show success (optional, maybe intrusive? User said "pongo en la esquina superior derecha" implies manual)
-    // Let's NOT auto-open the menu, but ensure the scene list IS populated.
-
     // Render list
     renderSceneList();
 
-    // If no scene was active, load the first new one
-    if (currentSceneIndex === -1) {
-        loadScene(startIndex);
-    }
+    // Always load the first scene of the new batch
+    loadScene(0);
 
-    // Reset input so same files can be selected again if needed (though tricky with multiple)
+    // Reset input so same files can be selected again
     event.target.value = '';
 }
 
