@@ -180,7 +180,7 @@ function handleFileUpload(event) {
 
     // Convert FileList to Array and process
     const newScenes = Array.from(files).map(file => ({
-        name: file.name,
+        name: file.name.replace(/\.[^/.]+$/, ""), // Remove extension
         file: file,
         url: URL.createObjectURL(file)
     }));
