@@ -381,13 +381,16 @@ hr {
     }
 
     .panel-container.bottom-left {
-        bottom: 10px;
+        bottom: 30px;
+        /* More space for mobile nav bars */
         left: 10px;
         right: 10px;
         /* expand width if needed */
         width: auto;
         align-items: stretch;
         /* Make panels full width capable */
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+        /* iOS Safe Area */
     }
 
     /* Panels Mobile */

@@ -13,6 +13,7 @@ const sceneListPanel = document.getElementById('scene-list');
 const sceneItemsContainer = document.getElementById('scene-items');
 const toggleScenesBtn = document.getElementById('toggle-scenes');
 const toggleControlsBtn = document.getElementById('toggle-controls');
+const closeControlsBtn = document.getElementById('close-controls'); // New X button
 const controlsPanel = document.getElementById('controls-help');
 
 let scenes = []; // Array of { name, url, file }
@@ -54,7 +55,7 @@ function init() {
     controls.dampingFactor = 0.05;
     controls.rotateSpeed = -0.5;
 
-    // Custom Zoom (FOV)
+    // Custom Zoom (FOV) - Wheel
     canvas.addEventListener('wheel', (event) => {
         event.preventDefault();
         const fovMin = 30;
@@ -65,6 +66,43 @@ function init() {
         camera.fov = Math.max(fovMin, Math.min(fovMax, camera.fov));
         camera.updateProjectionMatrix();
     }, { passive: false });
+
+    // Custom Zoom (FOV) - Touch (Pinch)
+    let initialPinchDistance = null;
+    let initialFov = null;
+
+    canvas.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 2) {
+            const dx = e.touches[0].pageX - e.touches[1].pageX;
+            const dy = e.touches[0].pageY - e.touches[1].pageY;
+            initialPinchDistance = Math.sqrt(dx * dx + dy * dy);
+            initialFov = camera.fov;
+        }
+    }, { passive: false });
+
+    canvas.addEventListener('touchmove', (e) => {
+        if (e.touches.length === 2 && initialPinchDistance !== null) {
+            e.preventDefault(); // Prevent page scroll
+            const dx = e.touches[0].pageX - e.touches[1].pageX;
+            const dy = e.touches[0].pageY - e.touches[1].pageY;
+            const currentDistance = Math.sqrt(dx * dx + dy * dy);
+
+            // Calculate zoom factor
+            // Distance increase -> Zoom IN (FOV decrease), so we subtract
+            const diff = initialPinchDistance - currentDistance;
+            const sensitivity = 0.2;
+
+            let newFov = initialFov + diff * sensitivity;
+            newFov = Math.max(30, Math.min(100, newFov));
+
+            camera.fov = newFov;
+            camera.updateProjectionMatrix();
+        }
+    }, { passive: false });
+
+    canvas.addEventListener('touchend', () => {
+        initialPinchDistance = null;
+    });
 
     // 5. Initial Placeholder
     createSphere();
@@ -91,6 +129,15 @@ function init() {
     if (toggleControlsBtn && controlsPanel) {
         toggleControlsBtn.addEventListener('click', () => {
             controlsPanel.classList.toggle('hidden');
+        });
+    }
+
+    // Close Controls Button (Desktop/Mobile X button)
+    if (closeControlsBtn && controlsPanel) {
+        closeControlsBtn.addEventListener('click', (e) => {
+            // Stop propagation to prevent hitting underlying elements if they overlap
+            e.stopPropagation();
+            controlsPanel.classList.add('hidden');
         });
     }
 
