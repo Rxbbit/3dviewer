@@ -375,28 +375,29 @@ hr {
 
     /* Containers */
     .panel-container.top-right {
-        top: 60px;
-        /* clear header */
-        right: 10px;
+        top: 10px;
+        left: 10px;
+        right: auto;
+        /* Move Scenes to Top Left to balance Loading button */
+        align-items: flex-start;
     }
 
     .panel-container.bottom-left {
-        bottom: 30px;
-        /* More space for mobile nav bars */
+        bottom: 10px;
         left: 10px;
         right: 10px;
-        /* expand width if needed */
         width: auto;
-        align-items: stretch;
-        /* Make panels full width capable */
-        padding-bottom: env(safe-area-inset-bottom, 0px);
-        /* iOS Safe Area */
+        align-items: flex-start;
+        /* Keep controls flush left */
+        padding-bottom: env(safe-area-inset-bottom, 5px);
     }
 
     /* Panels Mobile */
     #scene-list {
         width: 220px;
         /* Keep narrow enough */
+        order: 2;
+        /* Ensure panel opens downwards or naturally */
     }
 
     #controls-help {

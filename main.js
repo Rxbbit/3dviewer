@@ -7,8 +7,6 @@ let scene, camera, renderer, controls;
 let sphereMesh = null;
 const fileInput = document.getElementById('file-input');
 const loadingOverlay = document.getElementById('loading-overlay');
-const rotationSlider = document.getElementById('rotation-slider');
-const resetRotationBtn = document.getElementById('reset-rotation');
 const sceneListPanel = document.getElementById('scene-list');
 const sceneItemsContainer = document.getElementById('scene-items');
 const toggleScenesBtn = document.getElementById('toggle-scenes');
@@ -142,23 +140,7 @@ function init() {
     }
 
     // Rotation Controls
-    if (rotationSlider) {
-        rotationSlider.addEventListener('input', (e) => {
-            if (sphereMesh) {
-                // Rotate around Z axis (Roll) to fix tilted horizon
-                // Convert degrees to radians
-                const rad = THREE.MathUtils.degToRad(e.target.value);
-                sphereMesh.rotation.z = rad;
-            }
-        });
-    }
 
-    if (resetRotationBtn) {
-        resetRotationBtn.addEventListener('click', () => {
-            if (sphereMesh) sphereMesh.rotation.z = 0;
-            if (rotationSlider) rotationSlider.value = 0;
-        });
-    }
 }
 
 function createSphere(texture = null) {
