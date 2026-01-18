@@ -82,10 +82,10 @@ header {
     left: 20px;
     right: 20px;
     display: flex;
-    justify-content: center;
-    /* Center title */
+    justify-content: space-between;
     align-items: center;
     pointer-events: none;
+    gap: 12px;
 }
 
 h1 {
@@ -102,9 +102,15 @@ h1 {
 
 /* New Upload Button Placement? keeping it simple for now, maybe floats top left */
 header .controls {
-    position: absolute;
-    left: 0;
     pointer-events: auto;
+}
+
+header .nav-panel {
+    pointer-events: auto;
+    position: relative;
+    /* Context for dropdown */
+    margin-left: auto;
+    /* Push to right if title is on left, or just flex alignment */
 }
 
 /* Buttons */
@@ -261,6 +267,9 @@ hr {
 
 /* Scene List Specifics */
 #scene-list {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
     width: 240px;
     max-height: 60vh;
     display: flex;
@@ -350,17 +359,17 @@ hr {
         top: 10px;
         left: 10px;
         right: 10px;
-        flex-direction: row;
+        /* Default flex row is fine */
         justify-content: flex-end;
-        /* Push title right or center */
+        /* Align everything to right */
     }
 
     header .controls {
-        position: relative;
-        /* Unlock from absolute */
-        left: auto;
-        margin-right: auto;
-        /* Push others right */
+        margin-right: 0;
+    }
+
+    header .nav-panel {
+        margin-left: 0;
     }
 
     h1 {
@@ -374,13 +383,7 @@ hr {
     }
 
     /* Containers */
-    .panel-container.top-right {
-        top: 10px;
-        left: 10px;
-        right: auto;
-        /* Move Scenes to Top Left to balance Loading button */
-        align-items: flex-start;
-    }
+    /* Remove top-right panel container styles as it's now in header */
 
     .panel-container.bottom-left {
         bottom: 10px;

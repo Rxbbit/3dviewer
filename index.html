@@ -22,6 +22,21 @@
     <div id="ui-container">
         <header>
             <h1>360° Viewer</h1>
+            <!-- Scene List (Moved to Header) -->
+            <div id="scene-container" class="nav-panel">
+                <button id="toggle-scenes" class="btn-icon" aria-label="Toggle Scenes" title="Hide/Show Scenes">
+                    ☰
+                </button>
+                <div id="scene-list" class="panel hidden">
+                    <div class="panel-header">
+                        <h3>Scenes</h3>
+                    </div>
+                    <div id="scene-items">
+                        <!-- Items will be injected here -->
+                    </div>
+                </div>
+            </div>
+
             <div class="controls">
                 <label for="file-input" class="btn primary">
                     📂 Load Photos
@@ -35,20 +50,7 @@
             <p>Loading panorama...</p>
         </div>
 
-        <!-- Scene List (Right) -->
-        <div id="scene-container" class="panel-container top-right">
-            <button id="toggle-scenes" class="btn-icon" aria-label="Toggle Scenes" title="Hide/Show Scenes">
-                ☰
-            </button>
-            <div id="scene-list" class="panel">
-                <div class="panel-header">
-                    <h3>Scenes</h3>
-                </div>
-                <div id="scene-items">
-                    <!-- Items will be injected here -->
-                </div>
-            </div>
-        </div>
+
 
         <!-- Controls (Bottom Left) -->
         <div id="controls-container" class="panel-container bottom-left">
