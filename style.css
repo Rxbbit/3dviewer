@@ -1,10 +1,10 @@
 /* --- Variables --- */
 :root {
-    --bg-dark: #121212;
-    --surface-glass: rgba(18, 18, 18, 0.85);
+    --bg-dark: #333333;
+    --surface-glass: rgba(51, 51, 51, 0.95);
     /* Darker, more legible glass */
-    --surface-hover: rgba(40, 40, 40, 0.9);
-    --primary-color: #3b82f6;
+    --surface-hover: rgba(70, 70, 70, 0.9);
+    --primary-color: #28C4EA;
     /* Modern Blue */
     --text-main: #f3f4f6;
     --text-muted: #9ca3af;
@@ -100,12 +100,60 @@ h1 {
     pointer-events: auto;
 }
 
-/* New Upload Button Placement? keeping it simple for now, maybe floats top left */
+.header-right {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    pointer-events: auto;
+}
+
+/* Tooltip Container */
+.tooltip-container {
+    position: relative;
+    pointer-events: auto;
+}
+
+.tooltip-content {
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    width: 200px;
+    background: var(--surface-glass);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-color);
+    padding: 12px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-md);
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.2s ease;
+    pointer-events: none;
+    visibility: hidden;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    z-index: 50;
+}
+
+.tooltip-container:hover .tooltip-content {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+}
+
+.tooltip-content ul {
+    margin-top: 8px;
+    padding-left: 20px;
+}
+
+.tooltip-content li {
+    margin-bottom: 4px;
+}
+
 /* --- Unified Menu --- */
 #main-menu-container {
     position: relative;
     pointer-events: auto;
-    margin-left: auto;
 }
 
 .menu-dropdown {
@@ -149,7 +197,73 @@ h1 {
 .menu-section {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 12px;
+}
+
+.control-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    color: var(--text-main);
+}
+
+.control-column {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.val-display {
+    color: var(--primary-color);
+    font-family: monospace;
+    font-size: 0.9rem;
+}
+
+/* Toggle Switch */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.2);
+    transition: .4s;
+    border-radius: 22px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked+.slider {
+    background-color: var(--primary-color);
+}
+
+input:checked+.slider:before {
+    transform: translateX(18px);
 }
 
 .section-header h3 {
@@ -204,13 +318,13 @@ h1 {
 }
 
 .btn.primary {
-    background: rgba(59, 130, 246, 0.2);
-    border-color: rgba(59, 130, 246, 0.4);
-    color: #60a5fa;
+    background: rgba(40, 196, 234, 0.2);
+    border-color: rgba(40, 196, 234, 0.4);
+    color: #28C4EA;
 }
 
 .btn.primary:hover {
-    background: rgba(59, 130, 246, 0.3);
+    background: rgba(40, 196, 234, 0.3);
 }
 
 /* Icon Buttons (Circular) */
@@ -319,6 +433,53 @@ input[type="range"] {
     border-radius: 2px;
     outline: none;
     margin: 10px 0;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+/* Webkit (Chrome, Safari, Edge) */
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #28C4EA;
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(40, 196, 234, 0.5);
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+    background: #3DD9FF;
+    box-shadow: 0 0 12px rgba(40, 196, 234, 0.8);
+}
+
+/* Firefox */
+input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #28C4EA;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 0 8px rgba(40, 196, 234, 0.5);
+}
+
+input[type="range"]::-moz-range-thumb:hover {
+    background: #3DD9FF;
+    box-shadow: 0 0 12px rgba(40, 196, 234, 0.8);
+}
+
+/* Track color on active for webkit */
+input[type="range"]::-webkit-slider-runnable-track {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+}
+
+/* Track color for Firefox */
+input[type="range"]::-moz-range-track {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
 }
 
 hr {
@@ -365,9 +526,9 @@ hr {
 }
 
 .scene-item.active {
-    background: rgba(59, 130, 246, 0.15);
-    border-color: rgba(59, 130, 246, 0.3);
-    color: #93c5fd;
+    background: rgba(40, 196, 234, 0.15);
+    border-color: rgba(40, 196, 234, 0.3);
+    color: #28C4EA;
     font-weight: 500;
 }
 
@@ -449,4 +610,60 @@ hr {
     .btn {
         min-width: auto;
     }
+}
+
+/* Transition Overlay */
+#transition-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease-in-out;
+}
+
+#transition-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Drag & Drop Zone */
+#drop-zone {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(8px);
+    border: 4px dashed var(--primary-color);
+    margin: 10px;
+    width: calc(100vw - 20px);
+    height: calc(100vh - 20px);
+    border-radius: 20px;
+    pointer-events: none;
+    /* Let drag events pass through to body handler initially */
+}
+
+#drop-zone.active {
+    pointer-events: auto;
+}
+
+.drop-content {
+    text-align: center;
+    color: white;
+}
+
+.drop-icon {
+    font-size: 4rem;
+    display: block;
+    margin-bottom: 20px;
 }

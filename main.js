@@ -12,8 +12,19 @@ const menuDropdown = document.getElementById('menu-dropdown');
 const sceneItemsContainer = document.getElementById('scene-items');
 const scenesSection = document.getElementById('scenes-section'); // New container reference
 
+// New UI Elements
+const transitionOverlay = document.getElementById('transition-overlay');
+const dropZone = document.getElementById('drop-zone');
+const btnFullscreen = document.getElementById('btn-fullscreen');
+const toggleAutorotate = document.getElementById('toggle-autorotate');
+const sliderExposure = document.getElementById('slider-exposure');
+const valExposure = document.getElementById('exposure-val');
+const btnReset = document.getElementById('btn-reset');
+
 let scenes = []; // Array of { name, url, file }
 let currentSceneIndex = -1;
+let isAutoRotating = false;
+let defaultFov = 75; // Store default FOV for reset
 
 init();
 animate();
@@ -50,6 +61,7 @@ function init() {
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
     controls.rotateSpeed = -0.5;
+    controls.autoRotateSpeed = -1.0; // Slower and reversed direction
 
     // Custom Zoom (FOV) - Wheel
     canvas.addEventListener('wheel', (event) => {
@@ -131,9 +143,115 @@ function init() {
         });
     }
 
-    // Rotation Controls
+    // Rotation Controls & New Menu Listeners
+    if (toggleAutorotate) {
+        toggleAutorotate.addEventListener('change', (e) => {
+            isAutoRotating = e.target.checked;
+            controls.autoRotate = isAutoRotating;
+        });
+    }
 
+    if (sliderExposure) {
+        sliderExposure.addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value);
+            renderer.toneMappingExposure = val;
+            if (valExposure) valExposure.textContent = val.toFixed(1);
+        });
+    }
+
+    if (btnReset) {
+        btnReset.addEventListener('click', () => {
+            resetView();
+        });
+    }
+
+    if (btnFullscreen) {
+        btnFullscreen.addEventListener('click', toggleFullscreen);
+    }
+
+    // Drag and Drop (Global)
+    setupDragAndDrop();
+
+    // Default exposure init
+    if (sliderExposure) {
+        renderer.toneMappingExposure = parseFloat(sliderExposure.value);
+    }
 }
+
+function resetView() {
+    // Reset Camera Position
+    camera.position.set(0, 0, 0.1);
+    camera.lookAt(0, 0, 0);
+
+    // Reset FOV
+    camera.fov = defaultFov;
+    camera.updateProjectionMatrix();
+
+    // Reset Controls
+    controls.reset();
+    controls.autoRotate = isAutoRotating; // Keep auto-rotate state
+
+    // Reset Exposure
+    renderer.toneMappingExposure = 1.0;
+    if (sliderExposure) sliderExposure.value = "1.0";
+    if (valExposure) valExposure.textContent = "1.0";
+}
+
+function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+    } else {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        }
+    }
+}
+
+function setupDragAndDrop() {
+    // Prevent default behaviors
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        document.body.addEventListener(eventName, preventDefaults, false);
+    });
+
+    // Highlight drop zone
+    ['dragenter', 'dragover'].forEach(eventName => {
+        document.body.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        document.body.addEventListener(eventName, unhighlight, false);
+    });
+
+    // Handle dropped files
+    document.body.addEventListener('drop', handleDrop, false);
+}
+
+function preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+}
+
+function highlight(e) {
+    if (dropZone) {
+        dropZone.classList.remove('hidden');
+        // Small delay to ensure display:flex is applied before opacity transition if we wanted one
+        // but for now simple display toggling
+    }
+}
+
+function unhighlight(e) {
+    if (dropZone) dropZone.classList.add('hidden');
+}
+
+function handleDrop(e) {
+    const dt = e.dataTransfer;
+    const files = dt.files;
+
+    // Create a mock event object to reuse existing handler
+    handleFileUpload({ target: { files: files } });
+}
+
+
 
 function createSphere(texture = null) {
     if (sphereMesh) {
@@ -179,14 +297,14 @@ function handleFileUpload(event) {
     }
 
     // Convert FileList to Array and process
-    const newScenes = Array.from(files).map(file => ({
-        name: file.name.replace(/\.[^/.]+$/, ""), // Remove extension
+    const newScenes = Array.from(files).map((file, i) => ({
+        name: `Scene ${scenes.length + i + 1}`,
         file: file,
         url: URL.createObjectURL(file)
     }));
 
     // Add to scenes array
-    scenes = [...newScenes];
+    scenes = [...scenes, ...newScenes]; // Append correctly
 
     // Show the scenes section if hidden
     if (scenesSection) scenesSection.classList.remove('hidden');
@@ -222,38 +340,92 @@ function loadScene(index) {
     renderSceneList(); // Update active state
 
     const sceneData = scenes[index];
-    showLoading(true);
+    // showLoading(true); // Removed to allow smooth transition overlay to work
 
-    const extension = sceneData.name.split('.').pop().toLowerCase();
-    const url = sceneData.url;
+    // Transition: Fade Out (Black Screen)
+    if (transitionOverlay) transitionOverlay.classList.add('active');
+    if (transitionOverlay) transitionOverlay.classList.add('active');
 
-    const onLoad = (texture) => {
-        console.log(`Texture ${sceneData.name} loaded successfully`);
-        texture.mapping = THREE.EquirectangularReflectionMapping;
-        texture.colorSpace = THREE.SRGBColorSpace;
+    // Wait for fade out to complete (500ms CSS transition) before loading
+    setTimeout(() => {
+        const extension = sceneData.name.split('.').pop().toLowerCase();
+        const url = sceneData.url;
 
-        createSphere(texture);
-        showLoading(false);
-    };
+        const onLoad = (texture) => {
+            console.log(`Texture ${sceneData.name} loaded successfully`);
+            texture.mapping = THREE.EquirectangularReflectionMapping;
+            texture.colorSpace = THREE.SRGBColorSpace;
 
-    const onError = (err) => {
-        console.error("Error loading texture:", err);
-        alert(`Error loading image: ${err.message || 'Invalid format'}`);
-        showLoading(false);
-    };
-
-    if (extension === 'hdr') {
-        const loader = new RGBELoader();
-        loader.load(url, (texture) => {
-            console.log("HDR loaded");
             createSphere(texture);
+
+            // Wait a moment for render, then Fade In
+            requestAnimationFrame(() => {
+                if (transitionOverlay) transitionOverlay.classList.remove('active');
+                showLoading(false);
+
+                // Entry Zoom Effect
+                animateEntryZoom();
+            });
+        };
+
+        const onError = (err) => {
+            console.error("Error loading texture:", err);
+            alert(`Error loading image: ${err.message || 'Invalid format'}`);
             showLoading(false);
-        }, undefined, onError);
-    } else {
-        const loader = new THREE.TextureLoader();
-        loader.load(url, onLoad, undefined, onError);
-    }
+            if (transitionOverlay) transitionOverlay.classList.remove('active');
+        };
+
+        if (extension === 'hdr') {
+            const loader = new RGBELoader();
+            loader.load(url, (texture) => {
+                console.log("HDR loaded");
+
+                // Adjust HDR properties if needed
+                texture.mapping = THREE.EquirectangularReflectionMapping;
+
+                createSphere(texture);
+
+                requestAnimationFrame(() => {
+                    if (transitionOverlay) transitionOverlay.classList.remove('active');
+                    showLoading(false);
+                    animateEntryZoom();
+                });
+
+            }, undefined, onError);
+        } else {
+            const loader = new THREE.TextureLoader();
+            loader.load(url, onLoad, undefined, onError);
+        }
+    }, 500); // Sync with CSS transition time
 }
+
+function animateEntryZoom() {
+    const targetFov = defaultFov;
+    const startFov = defaultFov * 0.5; // Start zoomed in
+    camera.fov = startFov;
+    camera.updateProjectionMatrix();
+
+    let startTime = null;
+    const duration = 1500; // ms
+
+    function zoomStep(timestamp) {
+        if (!startTime) startTime = timestamp;
+        const progress = Math.min((timestamp - startTime) / duration, 1);
+
+        // Ease Out Cubic
+        const ease = 1 - Math.pow(1 - progress, 3);
+
+        camera.fov = startFov + (targetFov - startFov) * ease;
+        camera.updateProjectionMatrix();
+
+        if (progress < 1) {
+            requestAnimationFrame(zoomStep);
+        }
+    }
+
+    requestAnimationFrame(zoomStep);
+}
+
 
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;

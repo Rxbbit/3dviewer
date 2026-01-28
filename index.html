@@ -21,31 +21,80 @@
 <body>
     <div id="ui-container">
         <header>
-            <h1>360° Viewer</h1>
+            <div class="header-left">
+                <h1>360° Viewer</h1>
+            </div>
 
-            <!-- Unified Main Menu -->
-            <div id="main-menu-container">
-                <button id="toggle-menu" class="btn-icon" aria-label="Menu" title="Open Menu">
-                    ☰
+            <div class="header-right">
+                <!-- Fullscreen Toggle -->
+                <button id="btn-fullscreen" class="btn-icon" aria-label="Fullscreen" title="Toggle Fullscreen">
+                    ⛶
                 </button>
 
-                <div id="menu-dropdown" class="menu-dropdown hidden">
-                    <!-- Section: Upload -->
-                    <div class="menu-section">
-                        <label for="file-input" class="btn primary full-width">
-                            📂 Load Photos
-                            <input type="file" id="file-input" accept=".jpg,.jpeg,.png,.hdr" multiple
-                                style="display: none;">
-                        </label>
+                <!-- Help/Info -->
+                <div class="tooltip-container">
+                    <button id="btn-help" class="btn-icon" aria-label="Help">
+                        ?
+                    </button>
+                    <div class="tooltip-content">
+                        <p><strong>Controls:</strong></p>
+                        <ul>
+                            <li>Double click: Fullscreen</li>
+                            <li>Wheel/Pinch: Zoom</li>
+                            <li>Drag: Rotate</li>
+                        </ul>
                     </div>
+                </div>
 
-                    <!-- Section: Scenes -->
-                    <div id="scenes-section" class="menu-section hidden-empty">
-                        <div class="section-header">
-                            <h3>Scenes</h3>
+                <!-- Unified Main Menu -->
+                <div id="main-menu-container">
+                    <button id="toggle-menu" class="btn-icon" aria-label="Menu" title="Open Menu">
+                        ☰
+                    </button>
+
+                    <div id="menu-dropdown" class="menu-dropdown hidden">
+                        <!-- Section: Quick Actions -->
+                        <div class="menu-section">
+                            <div class="control-row">
+                                <span>Auto Rotate</span>
+                                <label class="switch">
+                                    <input type="checkbox" id="toggle-autorotate">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+
+                            <div class="control-column">
+                                <div class="control-row">
+                                    <span>Exposure</span>
+                                    <span id="exposure-val" class="val-display">1.0</span>
+                                </div>
+                                <input type="range" id="slider-exposure" min="0" max="2" step="0.1" value="1.0">
+                            </div>
+
+                            <button id="btn-reset" class="btn full-width">
+                                ↺ Reset View
+                            </button>
                         </div>
-                        <div id="scene-items">
-                            <!-- Items will be injected here -->
+
+                        <hr />
+
+                        <!-- Section: Upload -->
+                        <div class="menu-section">
+                            <label for="file-input" class="btn primary full-width">
+                                📂 Load Photos
+                                <input type="file" id="file-input" accept=".jpg,.jpeg,.png,.hdr" multiple
+                                    style="display: none;">
+                            </label>
+                        </div>
+
+                        <!-- Section: Scenes -->
+                        <div id="scenes-section" class="menu-section hidden-empty">
+                            <div class="section-header">
+                                <h3>Scenes</h3>
+                            </div>
+                            <div id="scene-items">
+                                <!-- Items will be injected here -->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -57,9 +106,16 @@
             <p>Loading panorama...</p>
         </div>
 
+        <!-- Transition Overlay for Fade Effects -->
+        <div id="transition-overlay"></div>
+    </div>
 
-
-
+    <!-- Drag & Drop Zone -->
+    <div id="drop-zone" class="hidden">
+        <div class="drop-content">
+            <span class="drop-icon">📂</span>
+            <h3>Drop images here</h3>
+        </div>
     </div>
 
     <canvas id="canvas"></canvas>
