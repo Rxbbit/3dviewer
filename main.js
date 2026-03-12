@@ -176,6 +176,30 @@ function init() {
     if (sliderExposure) {
         renderer.toneMappingExposure = parseFloat(sliderExposure.value);
     }
+
+    // Load default images from imagenes/ folder
+    loadDefaultImages();
+}
+
+function loadDefaultImages() {
+    const defaultFiles = [
+        { name: 'Scene 1', url: 'imagenes/a.png' },
+        { name: 'Scene 2', url: 'imagenes/aa.png' },
+        { name: 'Scene 3', url: 'imagenes/aaa.png' }
+    ];
+
+    scenes = defaultFiles.map(f => ({
+        name: f.name,
+        url: f.url,
+        file: null
+    }));
+
+    // Show the scenes section
+    if (scenesSection) scenesSection.classList.remove('hidden');
+
+    // Render scene list and load the first scene
+    renderSceneList();
+    loadScene(0);
 }
 
 function resetView() {
